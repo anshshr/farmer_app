@@ -6,6 +6,7 @@ import 'package:farmer_app/pages/app/services/pdf_extractor.dart';
 import 'package:farmer_app/pages/app/widgets/media_container.dart';
 import 'package:farmer_app/pages/app/widgets/parse_josn.dart';
 import 'package:farmer_app/pages/app/widgets/pie_chart_dipaly.dart';
+import 'package:farmer_app/pages/auth/widgets/custom_appbar.dart';
 import 'package:farmer_app/pages/auth/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -13,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -32,26 +34,43 @@ class _HomePageState extends State<HomePage> {
   double humidity = 0;
   double nitrogen = 0;
   double phosphorus = 0;
+  String calculatedArea = "";
+  Future<void> getArea() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? area = prefs.getString('enclosedArea');
+    setState(() {
+      calculatedArea = area ?? "0"; // Use the retrieved area or default to "0"
+    });
+  }
 
-  
+  @override
+  void initState() {
+    super.initState();
+    getArea(); // Fetch the area when the page initializes
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.tealAccent[100],
-        centerTitle: true,
-        title: const Text(
-          'Farmer Assistant',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-      ),
+      appBar: CustomAppBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                "Area Field",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                "Area of your field: $calculatedArea deca.m",
+                style: const TextStyle(fontSize: 16, color: Colors.black54),
+              ),
               const Text(
                 "Crop Details",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -243,8 +262,7 @@ class _HomePageState extends State<HomePage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.teal,
                       ),
-                      onPressed: ()  {
-                      },
+                      onPressed: () {},
                       icon: const Icon(Icons.picture_as_pdf),
                       label: const Text("Generate Certificate"),
                     ),
@@ -280,4 +298,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

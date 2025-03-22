@@ -2,6 +2,7 @@ import 'package:farmer_app/pages/auth/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:farmer_app/pages/auth/widgets/custom_textfield.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BankDetailsPage extends StatefulWidget {
   final PageController controller;
@@ -19,25 +20,29 @@ class _BankDetailsPageState extends State<BankDetailsPage> {
   final TextEditingController accountNumber = TextEditingController();
   final TextEditingController ifscCode = TextEditingController();
   final TextEditingController branch = TextEditingController();
+void goToNextPage() async {
+  if (bankName.text.isNotEmpty &&
+      accountNumber.text.isNotEmpty &&
+      ifscCode.text.isNotEmpty &&
+      branch.text.isNotEmpty) {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('Bank Name', bankName.text);
+    prefs.setString('Account Number', accountNumber.text);
+    prefs.setString('IFSC Code', ifscCode.text);
+    prefs.setString('Branch', branch.text);
 
-  void goToNextPage() {
-    if (bankName.text.isNotEmpty &&
-        accountNumber.text.isNotEmpty &&
-        ifscCode.text.isNotEmpty &&
-        branch.text.isNotEmpty) {
-      widget.onNext({
-        'Bank Name': bankName.text,
-        'Account Number': accountNumber.text,
-        'IFSC Code': ifscCode.text,
-        'Branch': branch.text,
-      });
-      widget.controller.nextPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.ease,
-      );
-    }
+    widget.onNext({
+      'Bank Name': bankName.text,
+      'Account Number': accountNumber.text,
+      'IFSC Code': ifscCode.text,
+      'Branch': branch.text,
+    });
+    widget.controller.nextPage(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.ease,
+    );
   }
-
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(

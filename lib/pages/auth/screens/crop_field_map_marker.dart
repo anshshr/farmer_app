@@ -1,9 +1,13 @@
+import 'package:farmer_app/pages/app/pages/home_page.dart';
+import 'package:farmer_app/pages/app/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:math';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FieldMapMarker extends StatefulWidget {
   @override
@@ -102,6 +106,30 @@ class _FieldMapMarkerState extends State<FieldMapMarker> {
       area += coords[i].x * coords[j].y - coords[j].x * coords[i].y;
     }
     return area.abs() / 2;
+  }
+
+  Future<void> _sendCalculatedArea() async {
+    if (enclosedArea > 0) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('enclosedArea', enclosedArea.toString());
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => BottomNav(userDetails: {})),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Enclosed Area Sent: ${enclosedArea.toStringAsFixed(2)} deca.m',
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please add at least 4 markers to calculate the area.'),
+        ),
+      );
+    }
   }
 
   @override
@@ -206,6 +234,20 @@ class _FieldMapMarkerState extends State<FieldMapMarker> {
                     child: ElevatedButton(
                       onPressed: _undoMarker,
                       child: Text('Undo Last Marker'),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 80,
+                    right: 20,
+                    child: ElevatedButton(
+                      onPressed: _sendCalculatedArea,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                      ),
+                      child: Text(
+                        'Send Area',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ],

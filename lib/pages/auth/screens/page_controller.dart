@@ -27,7 +27,7 @@ class _PageControllerScreenState extends State<PageControllerScreen> {
           AddressPage(controller: pageController, onNext: saveDetails),
           IdentificationPage(controller: pageController, onNext: saveDetails),
           BankDetailsPage(controller: pageController, onNext: saveDetails),
-          FinalSubmissionPage(userDetails: userDetails),
+          FinalSubmissionPage(),
         ],
       ),
     );

@@ -2,6 +2,7 @@ import 'package:farmer_app/pages/auth/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:farmer_app/pages/auth/widgets/custom_textfield.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IdentificationPage extends StatefulWidget {
   final PageController controller;
@@ -18,16 +19,19 @@ class _IdentificationPageState extends State<IdentificationPage> {
   final TextEditingController aadhar = TextEditingController();
   final TextEditingController pan = TextEditingController();
 
-  void goToNextPage() {
-    if (aadhar.text.isNotEmpty || pan.text.isNotEmpty) {
-      widget.onNext({'Aadhar': aadhar.text, 'PAN': pan.text});
-      widget.controller.nextPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.ease,
-      );
-    }
-  }
+void goToNextPage() async {
+  if (aadhar.text.isNotEmpty || pan.text.isNotEmpty) {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('Aadhar', aadhar.text);
+    prefs.setString('PAN', pan.text);
 
+    widget.onNext({'Aadhar': aadhar.text, 'PAN': pan.text});
+    widget.controller.nextPage(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.ease,
+    );
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,18 +1,27 @@
+import 'package:farmer_app/pages/app/pages/account_page.dart';
 import 'package:farmer_app/pages/app/pages/home_page.dart';
 import 'package:farmer_app/pages/app/pages/schemes_page.dart';
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
-  BottomNav({super.key});
+  final Map<String, String> userDetails; // Add userDetails as a parameter
+
+  const BottomNav({required this.userDetails, super.key});
 
   @override
   State<BottomNav> createState() => _BottomNavState();
 }
 
 class _BottomNavState extends State<BottomNav> {
-  List<Widget> pages = [HomePage(), SchemeListPage(), SchemeListPage()];
-
+  late List<Widget> pages;
   int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Pass the userDetails to the AccountPage
+    pages = [HomePage(), SchemeListPage(), AccountPage()];
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,8 @@ import 'package:farmer_app/pages/auth/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class AddressPage extends StatefulWidget {
   final PageController controller;
   final Function(Map<String, String>) onNext;
@@ -20,26 +22,32 @@ class _AddressPageState extends State<AddressPage> {
   final TextEditingController state = TextEditingController();
   final TextEditingController country = TextEditingController();
   final TextEditingController postalCode = TextEditingController();
+void goToNextPage() async {
+  if (village.text.isNotEmpty &&
+      district.text.isNotEmpty &&
+      state.text.isNotEmpty &&
+      country.text.isNotEmpty &&
+      postalCode.text.isNotEmpty) {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('Village', village.text);
+    prefs.setString('District', district.text);
+    prefs.setString('State', state.text);
+    prefs.setString('Country', country.text);
+    prefs.setString('Postal Code', postalCode.text);
 
-  void goToNextPage() {
-    if (village.text.isNotEmpty &&
-        district.text.isNotEmpty &&
-        state.text.isNotEmpty &&
-        country.text.isNotEmpty &&
-        postalCode.text.isNotEmpty) {
-      widget.onNext({
-        'Village': village.text,
-        'District': district.text,
-        'State': state.text,
-        'Country': country.text,
-        'Postal Code': postalCode.text,
-      });
-      widget.controller.nextPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.ease,
-      );
-    }
+    widget.onNext({
+      'Village': village.text,
+      'District': district.text,
+      'State': state.text,
+      'Country': country.text,
+      'Postal Code': postalCode.text,
+    });
+    widget.controller.nextPage(
+      duration: Duration(milliseconds: 300),
+      curve: Curves.ease,
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {

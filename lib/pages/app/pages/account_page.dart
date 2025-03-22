@@ -1,24 +1,26 @@
-import 'package:farmer_app/pages/auth/screens/crop_field_map_marker.dart';
-import 'package:farmer_app/pages/auth/screens/page_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class FinalSubmissionPage extends StatefulWidget {
-  FinalSubmissionPage({Key? key}) : super(key: key);
+class AccountPage extends StatefulWidget {
+  const AccountPage({super.key});
 
   @override
-  _FinalSubmissionPageState createState() => _FinalSubmissionPageState();
+  State<AccountPage> createState() => _AccountPageState();
 }
 
-class _FinalSubmissionPageState extends State<FinalSubmissionPage> {
+class _AccountPageState extends State<AccountPage> {
   Map<String, String> userDetails = {};
+  User? user;
 
   @override
   void initState() {
     super.initState();
-    _loadUserDetails();
+    user = FirebaseAuth.instance.currentUser;
+    _loadUserDetails(); // Load user details from SharedPreferences
   }
 
+  // Method to load user details from SharedPreferences
   void _loadUserDetails() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -42,16 +44,7 @@ class _FinalSubmissionPageState extends State<FinalSubmissionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PageControllerScreen()),
-            );
-          },
-        ),
-        title: const Text("Final Submission"),
+        title: const Text("Account Details"),
         backgroundColor: Colors.green,
         centerTitle: true,
       ),
@@ -88,10 +81,37 @@ class _FinalSubmissionPageState extends State<FinalSubmissionPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Profile Image
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage:
+                          user?.photoURL != null
+                              ? NetworkImage(user!.photoURL!)
+                              : const AssetImage('assets/default_profile.png')
+                                  as ImageProvider,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      user?.displayName ?? "User Name",
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      user?.email ?? "user@example.com",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
                     const Text(
-                      "Final Submission",
+                      "Account Details",
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                         color: Colors.green,
                       ),
@@ -126,34 +146,6 @@ class _FinalSubmissionPageState extends State<FinalSubmissionPage> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FieldMapMarker(),
-                          ),
-                        ); // Redirect to Homepage
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 20,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        "Submit & Go to Home",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),

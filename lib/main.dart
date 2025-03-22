@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
                 if (snapshot.hasData) {
                   return SplashScreen();
                 } else {
-                  return BottomNav();
+                  return PageControllerScreen();
                 }
               },
             );
