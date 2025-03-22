@@ -45,8 +45,8 @@ class MyApp extends StatelessWidget {
                   height: 300,
                   width: 300,
                   child: ClipOval(
-                    child: Image.asset(
-                      'assets/images/animation.gif', // Ensure the path is correct
+                    child: Image.network(
+                      'https://img.etimg.com/thumb/width-1200,height-1200,imgsize-218090,resizemode-75,msid-87639947/small-biz/sme-sector/from-india-to-brazil-farmers-face-post-apocalyptic-food-crisis.jpg',
                       fit: BoxFit.cover,
                     ),
                   ),

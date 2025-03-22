@@ -14,17 +14,11 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Image(
-            image: NetworkImage(
+          // Fullscreen Background Image
+          SizedBox.expand(
+            child: Image.network(
               'https://img.etimg.com/thumb/width-1200,height-1200,imgsize-218090,resizemode-75,msid-87639947/small-biz/sme-sector/from-india-to-brazil-farmers-face-post-apocalyptic-food-crisis.jpg',
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/splash_bg3.png'),
-                fit: BoxFit.cover,
-              ),
+              fit: BoxFit.cover,
             ),
           ),
 
@@ -61,14 +55,14 @@ class _SplashScreenState extends State<SplashScreen> {
                       style: TextStyle(
                         fontSize: 24,
                         color: Colors.white,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                     Text(
                       "AgriCredit",
                       style: TextStyle(
                         fontSize: 44,
-                        color: Colors.grey[50],
+                        color: Colors.white,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -78,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white70,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 32),
