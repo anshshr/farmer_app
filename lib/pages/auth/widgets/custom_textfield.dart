@@ -5,12 +5,14 @@ class CustomTextfield extends StatelessWidget {
   TextEditingController controller;
   String hintText;
   TextInputType? inputType;
+  IconButton? suffisuxicon;
   CustomTextfield({
-    super.key,
+    Key? key,
     required this.controller,
     required this.hintText,
     this.inputType,
-  });
+    this.suffisuxicon,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class CustomTextfield extends StatelessWidget {
         ),
 
         contentPadding: EdgeInsets.all(13),
+        suffixIcon: suffisuxicon,
       ),
     );
   }
