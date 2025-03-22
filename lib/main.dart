@@ -66,9 +66,7 @@ class MyApp extends StatelessWidget {
               stream: auth.authStateChanges(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-
                   return SplashScreen();
-                 
                 } else {
                   return BottomNav();
                 }
