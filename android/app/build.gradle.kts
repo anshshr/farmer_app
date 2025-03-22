@@ -8,8 +8,12 @@ plugins {
 android {
     namespace = "com.example.farmer_app"
     compileSdk = flutter.compileSdkVersion
+<<<<<<< HEAD
     // ndkVersion = flutter.ndkVersion
     ndkVersion = "28.0.13004108"
+=======
+    ndkVersion = "27.0.12077973"
+>>>>>>> 027a9cbd11a7e255f3811a9ba7692f478a324b81
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
