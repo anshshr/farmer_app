@@ -1,3 +1,5 @@
+import 'package:farmer_app/pages/app/pages/home_page.dart';
+import 'package:farmer_app/pages/app/widgets/bottom_nav.dart';
 import 'package:farmer_app/pages/auth/screens/page_controller.dart';
 import 'package:farmer_app/pages/auth/splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   Future<void> _showAnimation() async {
-    await Future.delayed(const Duration(seconds: 3));
+    // await Future.delayed(const Duration(seconds: 3));
   }
 
   @override
@@ -59,9 +61,9 @@ class MyApp extends StatelessWidget {
               stream: auth.authStateChanges(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return PageControllerScreen();
+                  return BottomNav();
                 } else {
-                  return PageControllerScreen();
+                  return BottomNav();
                 }
               },
             );
