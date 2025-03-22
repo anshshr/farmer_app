@@ -19,7 +19,7 @@ class PieChartDipaly extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PieChart(
-      swapAnimationDuration: const Duration(milliseconds: 800),
+      swapAnimationDuration: const Duration(milliseconds: 1000),
       curve: Curves.easeInOut,
       PieChartData(
         sections: [
