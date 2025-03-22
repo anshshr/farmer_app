@@ -1,4 +1,6 @@
-import "package:farmer_app/pages/auth/register.dart";
+import "package:farmer_app/pages/app/pages/address_page.dart";
+import "package:farmer_app/pages/app/pages/bankDetails.dart";
+import "package:farmer_app/pages/app/pages/identification_page.dart";
 import "package:flutter/material.dart";
 
 void main() {
@@ -6,7 +8,7 @@ void main() {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "farmer app",
-      home: Register(),
+      home: Bankdetails(),
     ),
   );
 }
