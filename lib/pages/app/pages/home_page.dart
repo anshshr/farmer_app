@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:farmer_app/pages/app/pages/chat_page.dart';
+import 'package:farmer_app/pages/app/services/create_pdf.dart';
 import 'package:farmer_app/pages/app/services/gemini_services.dart';
+import 'package:farmer_app/pages/app/services/get_soilper.dart';
 import 'package:farmer_app/pages/app/services/pdf_extractor.dart';
 import 'package:farmer_app/pages/app/widgets/media_container.dart';
 import 'package:farmer_app/pages/app/widgets/parse_josn.dart';
@@ -10,9 +12,6 @@ import 'package:farmer_app/pages/auth/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:convert';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -32,8 +31,31 @@ class _HomePageState extends State<HomePage> {
   double humidity = 0;
   double nitrogen = 0;
   double phosphorus = 0;
+  String soilpercentage = "";
 
-  
+  Map<String, String> collectPdfData() {
+    Map<String, String> pdfData = {};
+
+    // Crop Name
+    pdfData['crop_name'] = cropName.text;
+
+    // Gemini Extracted Text
+    pdfData['gemini_response'] = extractedText;
+
+    // Soil Parameters
+    pdfData['phosphorus'] = phosphorus.toString();
+    pdfData['nitrogen'] = nitrogen.toString();
+    pdfData['humidity'] = humidity.toString();
+    pdfData['rainfall'] = rainfall.toString();
+    pdfData['soil_percentage'] = soilpercentage;
+
+    // Image Paths (For simplicity, assuming local paths)
+    for (int i = 0; i < mediaData.length; i++) {
+      pdfData['image_$i'] = mediaData[i].path;
+    }
+
+    return pdfData;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +146,7 @@ class _HomePageState extends State<HomePage> {
 
                     // Updated prompt
                     String geminiPdfResponse = await getAIResponse(
-                      "$data\n\nYou are given data extracted from a soil certificate. Analyze the content and extract the following parameters:\n- phosphorus\n- nitrogen\n- pH level\n- rainfall\n- temperature\n- humidity\n\nIf any parameter is missing, estimate realistic values based on context.\n\nReturn a JSON object with keys: \"phosphorus\", \"nitrogen\", \"ph\", \"rainfall\", \"temperature\", \"humidity\".\n\nEnsure the JSON is formatted correctly without any extra text, explanation, or unnecessary information.",
+                      "$data\n\nYou are given data extracted from a soil certificate. Analyze the content and extract the following parameters:\n- phosphorus\n- nitrogen\n- pH level\n- rainfall\n- temperature\n- humidity\n\nIf any parameter is missing, put a  realistic values based on context or whatever you feel is good values for them but dont make any values empty.\n\nReturn a JSON object with keys: \"phosphorus\", \"nitrogen\", \"ph\", \"rainfall\", \"temperature\", \"humidity\".\n\nEnsure the JSON is formatted correctly without any extra text, explanation, or unnecessary information.",
                     );
 
                     print("Gemini Response: $geminiPdfResponse");
@@ -144,9 +166,20 @@ class _HomePageState extends State<HomePage> {
                         ),
                       );
                     }
+                    var soilper = await getSoilPercentage(
+                      nitrogen,
+                      phosphorus,
+                      43,
+                      double.tryParse(soilData['ph'].toString()) ?? 0,
+                      double.tryParse(soilData['temprature'].toString()) ?? 0,
+                      rainfall,
+                      humidity,
+                      cropName.text,
+                    );
 
                     setState(() {
                       extractedText = geminiPdfResponse;
+                      soilpercentage = soilper;
                       phosphorus =
                           double.tryParse(soilData['phosphorus'].toString()) ??
                           0;
@@ -209,9 +242,9 @@ class _HomePageState extends State<HomePage> {
                             rainfall: rainfall,
                           ),
                         ),
-                        const Positioned(
+                        Positioned(
                           child: Text(
-                            'Soil Percentage\n      20%',
+                            'Soil Percentage\n      ${soilpercentage}%',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -243,7 +276,12 @@ class _HomePageState extends State<HomePage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.teal,
                       ),
-                      onPressed: ()  {
+                      onPressed: () {
+                        Map<String, String> pdfData = collectPdfData();
+
+                        // Debug Print
+                        print("Collected Data: $pdfData");
+                        generatePdf(pdfData);
                       },
                       icon: const Icon(Icons.picture_as_pdf),
                       label: const Text("Generate Certificate"),
@@ -280,4 +318,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

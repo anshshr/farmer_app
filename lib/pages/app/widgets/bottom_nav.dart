@@ -1,5 +1,6 @@
 import 'package:farmer_app/pages/app/pages/home_page.dart';
 import 'package:farmer_app/pages/app/pages/schemes_page.dart';
+import 'package:farmer_app/pages/auth/screens/final_submission.dart';
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
@@ -10,7 +11,11 @@ class BottomNav extends StatefulWidget {
 }
 
 class _BottomNavState extends State<BottomNav> {
-  List<Widget> pages = [HomePage(), SchemeListPage(), SchemeListPage()];
+  List<Widget> pages = [
+    HomePage(),
+    SchemeListPage(),
+    FinalSubmissionPage(userDetails: {}),
+  ];
 
   int currentIndex = 0;
 
