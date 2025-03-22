@@ -1,6 +1,7 @@
 import 'package:farmer_app/pages/app/pages/account_page.dart';
 import 'package:farmer_app/pages/app/pages/home_page.dart';
 import 'package:farmer_app/pages/app/pages/schemes_page.dart';
+import 'package:farmer_app/pages/auth/screens/final_submission.dart';
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
