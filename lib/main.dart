@@ -25,16 +25,21 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Farmer App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.green,
-          brightness: Brightness.dark,
+        primaryColor: Colors.green,
+        scaffoldBackgroundColor: Colors.white,
+        colorScheme: ColorScheme.light(
+          primary: Colors.green,
+          onPrimary: Colors.white,
+          secondary: Colors.greenAccent,
         ),
-        useMaterial3: true,
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.black),
+          bodyMedium: TextStyle(color: Colors.black),
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
+        ),
       ),
       home: FutureBuilder(
         future: _showAnimation(),
@@ -59,7 +64,7 @@ class MyApp extends StatelessWidget {
               stream: auth.authStateChanges(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return PageControllerScreen();
+                  return SplashScreen();
                 } else {
                   return PageControllerScreen();
                 }

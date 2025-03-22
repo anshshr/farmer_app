@@ -1,40 +1,42 @@
-import 'dart:io';
-
+import 'package:farmer_app/pages/auth/widgets/custom_appbar.dart';
 import 'package:farmer_app/pages/auth/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
+import 'dart:ui' as ui;
 
-class addressPage extends StatefulWidget {
-  addressPage({super.key});
+class AddressPage extends StatefulWidget {
+  final PageController controller;
+  final Function(Map<String, String>) onNext;
+
+  AddressPage({required this.controller, required this.onNext, Key? key})
+    : super(key: key);
 
   @override
-  State<addressPage> createState() => _addressPageState();
+  _AddressPageState createState() => _AddressPageState();
 }
 
-class _addressPageState extends State<addressPage> {
-  TextEditingController village = TextEditingController();
-  TextEditingController district = TextEditingController();
-  TextEditingController state = TextEditingController();
-  TextEditingController country = TextEditingController();
-  TextEditingController postalCode = TextEditingController();
-  File? file;
+class _AddressPageState extends State<AddressPage> {
+  final TextEditingController village = TextEditingController();
+  final TextEditingController district = TextEditingController();
+  final TextEditingController state = TextEditingController();
+  final TextEditingController country = TextEditingController();
+  final TextEditingController postalCode = TextEditingController();
 
-  Future<void> _pickFile() async {
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['pdf', 'doc', 'docx'],
-      );
-
-      if (result != null) {
-        setState(() {
-          file = File(result.files.single.path!);
-          ;
-        });
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error picking file: ${e.toString()}')),
+  void goToNextPage() {
+    if (village.text.isNotEmpty &&
+        district.text.isNotEmpty &&
+        state.text.isNotEmpty &&
+        country.text.isNotEmpty &&
+        postalCode.text.isNotEmpty) {
+      widget.onNext({
+        'Village': village.text,
+        'District': district.text,
+        'State': state.text,
+        'Country': country.text,
+        'Postal Code': postalCode.text,
+      });
+      widget.controller.nextPage(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.ease,
       );
     }
   }
@@ -42,47 +44,97 @@ class _addressPageState extends State<addressPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(
-          height: 450,
-          padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Address Details",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+      appBar: CustomAppBar(),
+      body: Stack(
+        children: [
+          // Background Image
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(
+                  'https://th.bing.com/th/id/OIP.iyYZ6JRT93KJHo-2axvlVwHaF7?rs=1&pid=ImgDetMain',
+                ),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          // Dark Overlay
+          Container(color: Colors.black.withOpacity(0.1)),
+
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: SingleChildScrollView(
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  elevation: 2,
+                  color: Colors.white.withOpacity(0.75),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CustomTextfield(
+                          controller: village,
+                          hintText: 'Enter Your Village Name',
+                          inputType: TextInputType.text,
+                        ),
+                        SizedBox(height: 15),
+                        CustomTextfield(
+                          controller: district,
+                          hintText: 'Enter Your District Name',
+                          inputType: TextInputType.text,
+                        ),
+                        SizedBox(height: 15),
+                        CustomTextfield(
+                          controller: state,
+                          hintText: 'Enter Your State Name',
+                          inputType: TextInputType.text,
+                        ),
+                        SizedBox(height: 15),
+                        CustomTextfield(
+                          controller: country,
+                          hintText: 'Enter Your Country Name',
+                          inputType: TextInputType.text,
+                        ),
+                        SizedBox(height: 15),
+                        CustomTextfield(
+                          controller: postalCode,
+                          hintText: 'Enter Your Postal Code',
+                          inputType: TextInputType.number,
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: goToNextPage,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 40,
+                              vertical: 15,
+                            ),
+                          ),
+                          child: Text(
+                            "Next",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 20),
-              CustomTextfield(
-                controller: village,
-                hintText: 'Enter Your Village name',
-              ),
-              CustomTextfield(
-                controller: district,
-                hintText: 'Enter Your District name',
-              ),
-              CustomTextfield(
-                controller: state,
-                hintText: 'Enter Your state name',
-              ),
-              CustomTextfield(
-                controller: country,
-                hintText: 'Enter Your country name',
-              ),
-              CustomTextfield(
-                controller: postalCode,
-                hintText: 'Enter Your postalCode ',
-                inputType: TextInputType.phone,
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
