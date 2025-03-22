@@ -1,8 +1,6 @@
 import 'package:farmer_app/pages/auth/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
-
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -19,7 +17,9 @@ class _SplashScreenState extends State<SplashScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/splash_bg3.png'),
+                image: NetworkImage(
+                  "https://img.etimg.com/thumb/width-1200,height-1200,imgsize-218090,resizemode-75,msid-87639947/small-biz/sme-sector/from-india-to-brazil-farmers-face-post-apocalyptic-food-crisis.jpg",
+                ),
                 fit: BoxFit.cover,
               ),
             ),
@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Spacer(), // Push content to the bottom
-              Padding(
+              Padding(goo
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,9 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => Login(),
-                              ),
+                              MaterialPageRoute(builder: (context) => Login()),
                             );
                           },
                           style: TextButton.styleFrom(

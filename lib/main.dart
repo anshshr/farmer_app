@@ -1,3 +1,4 @@
+import 'package:farmer_app/pages/auth/screens/page_controller.dart';
 import 'package:farmer_app/pages/auth/splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -45,10 +46,7 @@ class MyApp extends StatelessWidget {
                   height: 300,
                   width: 300,
                   child: ClipOval(
-                    child: Image.asset(
-                      'assets/images/animation.gif', // Ensure the path is correct
-                      fit: BoxFit.cover,
-                    ),
+                    child: Image.network("https://img.etimg.com/thumb/width-1200,height-1200,imgsize-218090,resizemode-75,msid-87639947/small-biz/sme-sector/from-india-to-brazil-farmers-face-post-apocalyptic-food-crisis.jpg")
                   ),
                 ),
               ),
@@ -58,9 +56,9 @@ class MyApp extends StatelessWidget {
               stream: auth.authStateChanges(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return SplashScreen();
+                  return PageControllerScreen();
                 } else {
-                  return SplashScreen();
+                  return PageControllerScreen();
                 }
               },
             );

@@ -1,4 +1,4 @@
-import 'package:farmer_app/pages/app/widgets/custom_textfield.dart';
+import 'package:farmer_app/pages/auth/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
 class Bankdetails extends StatelessWidget {

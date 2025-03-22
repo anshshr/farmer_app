@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:farmer_app/pages/app/widgets/custom_textfield.dart';
+import 'package:farmer_app/pages/auth/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 
