@@ -37,6 +37,13 @@
             {
               "client_id": "509149135649-0vst4d7eg8usbplta2plmsi5cbk1rkke.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "509149135649-j06hblkbkd2m7u0872c9mrfv0kd58cmd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.farmerApp"
+              }
             }
           ]
         }
