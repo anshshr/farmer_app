@@ -1,134 +1,40 @@
-import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 
-class LiveLocationPage extends StatefulWidget {
-  const LiveLocationPage({super.key});
-
-  @override
-  _LiveLocationPageState createState() => _LiveLocationPageState();
-}
-
-class _LiveLocationPageState extends State<LiveLocationPage> {
-  String _locationMessage = "";
-  bool _isLoading = false;
-
-  Future<void> _getCurrentLocation() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      // Check for permissions
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        setState(() {
-          _locationMessage = "Location services are disabled.";
-          _isLoading = false;
-        });
-        return;
-      }
-
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission != LocationPermission.whileInUse &&
-            permission != LocationPermission.always) {
-          setState(() {
-            _locationMessage = "Location permissions are denied";
-            _isLoading = false;
-          });
-          return;
-        }
-      }
-
-      // Attempt to get the last known location first
-      Position? position = await Geolocator.getLastKnownPosition();
-      if (position == null) {
-        // If no last known location, request a new position
-        position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.low, // Lower accuracy for faster response
-        );
-      }
-
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
-
-      setState(() {
-        _locationMessage =
-            "Latitude: ${position?.latitude}\nLongitude: ${position?.longitude}\n\n"
-            "Address: ${placemarks.first.street ?? ''}, ${placemarks.first.locality ?? ''}, ${placemarks.first.country ?? ''}";
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _locationMessage = "Error: ${e.toString()}";
-        _isLoading = false;
-      });
+Future<String> getCityName() async {
+  try {
+    // Check if location services are enabled
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return "Location services disabled";
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          'Live Location',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        backgroundColor: Colors.blue,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: _getCurrentLocation,
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.blue, // Button color
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                  elevation: 5,
-                ),
-                child: const Text('Get Current Location'),
-              ),
-              const SizedBox(height: 20),
-              _isLoading
-                  ? const CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                    )
-                  : Card(
-                      elevation: 2,
-                      color: Colors.blue[100],
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          _locationMessage,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-            ],
-          ),
-        ),
-      ),
+    // Check permissions
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        return "Permission denied";
+      }
+    }
+
+    // Get current location
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.low,
     );
+
+    // Reverse geocoding to get placemark
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      position.latitude,
+      position.longitude,
+    );
+
+    String city = placemarks.first.locality ?? "City not found";
+    print(city);
+    return city;
+  } catch (e) {
+    print(e.toString());
+    return "Error: ${e.toString()}";
   }
 }
