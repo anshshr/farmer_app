@@ -68,9 +68,9 @@ class MyApp extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   //TODO : revert back this
-                  return CycloneForecastScreen();
+                  return BottomNav(userDetails: {});
                 } else {
-                  return CycloneForecastScreen();
+                  return BottomNav(userDetails: {});
                 }
               },
             );

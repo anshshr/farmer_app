@@ -1,4 +1,5 @@
 import 'package:farmer_app/pages/app/pages/account_page.dart';
+import 'package:farmer_app/pages/app/pages/features_page.dart';
 import 'package:farmer_app/pages/app/pages/home_page.dart';
 import 'package:farmer_app/pages/app/pages/schemes_page.dart';
 import 'package:farmer_app/pages/auth/screens/final_submission.dart';
@@ -21,7 +22,7 @@ class _BottomNavState extends State<BottomNav> {
   void initState() {
     super.initState();
     // Pass the userDetails to the AccountPage
-    pages = [HomePage(), SchemeListPage(), AccountPage()];
+    pages = [HomePage(), SchemeListPage(), FeaturesPage(), AccountPage()];
   }
 
   @override
@@ -39,12 +40,26 @@ class _BottomNavState extends State<BottomNav> {
         selectedItemColor: Colors.green,
         unselectedItemColor: Colors.grey,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_box),
+            icon: Icon(Icons.home, color: Colors.black, size: 30),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_box, color: Colors.black, size: 30),
             label: 'Projects',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.dashboard_customize,
+              color: Colors.black,
+              size: 30,
+            ),
+            label: 'Features',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, color: Colors.black, size: 30),
+            label: 'Account',
+          ),
         ],
       ),
     );

@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
 
       // Step 5: Update the state with the calculated percentage
       setState(() {
-        temp_diff = percentageDifference + 100.00;
+        temp_diff = percentageDifference.abs();
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -429,15 +429,28 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ChatPage()),
-          );
-        },
-        child: Icon(Icons.chat, color: Colors.teal[100], size: 30),
-        backgroundColor: Colors.teal,
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatPage()),
+              );
+            },
+            child: Icon(Icons.chat, color: Colors.teal[100], size: 30),
+            backgroundColor: Colors.teal,
+          ),
+          const SizedBox(height: 10), // Space between the buttons
+          FloatingActionButton(
+            onPressed: () {
+              // Add your desired functionality here
+            },
+            child: Icon(Icons.cyclone, color: Colors.teal[100], size: 30),
+            backgroundColor: Colors.teal,
+          ),
+        ],
       ),
     );
   }
